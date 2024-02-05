@@ -13,7 +13,7 @@ module.exports = {
             return await interaction.editReply("There are no songs in the queue")
         }
 
-        const totalPages = Math.ceil(queue.tracks.length / 10) || 1
+        const totalPages = Math.ceil(queue.tracks.size / 10) || 1
         const page = (interaction.options.getNumber("page") || 1) - 1
 
         if (page > totalPages)
