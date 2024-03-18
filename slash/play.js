@@ -30,6 +30,11 @@ module.exports = {
             subcommand
                 .setName("dimsum")
                 .setDescription("Plays dimsum paradise forever")
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName("dimsumshort")
+                .setDescription("Plays short dimsum paradise version forever")
         ),
         run: async ({ client, interaction }) => {
             if (!interaction.member.voice.channel)
@@ -97,6 +102,28 @@ module.exports = {
                     .setThumbnail(song.thumbnail)
                     .setFooter({ text: `Duration: ${song.duration}` })
             }else if (interaction.options.getSubcommand() === "dimsum"){
+                let url = "https://www.youtube.com/watch?v=6aJO8mtmMfc"
+                const result = await client.player.search(url, {
+                    requestedBy: interaction.user,
+                    searchEngine: QueryType.YOUTUBE
+                })
+
+                if (result.tracks.length === 0)
+                    return interaction.editReply("No results")
+
+                const song = result.tracks[0]
+                if (queue.isPlaying) queue.clear()
+
+                await queue.addTrack(song)
+                embed
+                    .setDescription(`**[${song.title}](${song.url})** has been added to the Queue`)
+                    .setThumbnail(song.thumbnail)
+                    .setFooter({ text: `Duration: ${song.duration}` })
+                
+                // setting track to repeat
+                queue.setRepeatMode(1)
+                
+            }else if (interaction.options.getSubcommand() === "dimsumshort"){
                 let url = "https://www.youtube.com/shorts/le5a8GGhyds"
                 const result = await client.player.search(url, {
                     requestedBy: interaction.user,
